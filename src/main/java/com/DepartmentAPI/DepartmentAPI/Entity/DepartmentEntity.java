@@ -1,5 +1,6 @@
 package com.DepartmentAPI.DepartmentAPI.Entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,5 +21,6 @@ public class DepartmentEntity {
     private String desc;
     private Double salary;
     private String email;
+    @JsonProperty("isActive")
     private Boolean isActive;
 }
