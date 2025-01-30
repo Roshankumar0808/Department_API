@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(path = "/department")
@@ -46,6 +48,17 @@ private final DepartmentService departmentService;
        else{
         return   ResponseEntity.notFound().build();
        }
+    }
+
+    @PatchMapping(path = "/{DepartmentId}")
+    public ResponseEntity<DepartmentDTO>patchdepartment(@RequestBody Map<String, Object>departmentdata,@PathVariable Long DepartmentId){
+        DepartmentDTO departmentDTO=departmentService.patchdepartment(departmentdata,DepartmentId);
+        if(departmentDTO==null){
+           return ResponseEntity.notFound().build();
+        }
+        else {
+           return ResponseEntity.ok(departmentDTO);
+        }
     }
 
 

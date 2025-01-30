@@ -5,9 +5,13 @@ import com.DepartmentAPI.DepartmentAPI.Entity.DepartmentEntity;
 import com.DepartmentAPI.DepartmentAPI.Exception.ResourceNotFound;
 import com.DepartmentAPI.DepartmentAPI.Repositry.DepartmentRepo;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.util.ReflectionUtils;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,6 +55,24 @@ public class DepartmentService {
         isExist(DepartmentId);
         departmentRepo.deleteById(DepartmentId);
         return true;
+
+    }
+
+    public DepartmentDTO patchdepartment(Map<String, Object> departmentdata, Long departmentId) {
+        boolean isExistcheck=departmentRepo.existsById(departmentId);
+        if(isExistcheck){
+            DepartmentEntity departmentEntity=departmentRepo.findById(departmentId).get();
+            departmentdata.forEach((key,value)->{
+                Field toupdate= ReflectionUtils.findRequiredField(DepartmentEntity.class,key);
+                toupdate.setAccessible(true);
+                ReflectionUtils.setField(toupdate,departmentEntity,value);
+            });
+            return modelMapper.map(departmentRepo.save(departmentEntity),DepartmentDTO.class);
+        }
+        else{
+            isExist(departmentId);
+            return null;
+        }
 
     }
 }
